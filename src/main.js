@@ -4,6 +4,10 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import { element } from 'three/tsl';
 
+// URLs
+
+const ballURL = new URL('/Models/soccerBall2.glb', import.meta.url);
+
 // shaders
 const vertexShader = `
   uniform float time;
@@ -29,18 +33,13 @@ const fragmentShader = `
   }
 `;
 
-
-
-// load in models
-
-
 // loading manager
 const loadingManager = new THREE.LoadingManager();
 
-loadingManager.onLoad = function() {
+/*loadingManager.onLoad = function() {
     document.getElementById("loadingScreen").style.display = "none";
     animate();
-}
+}*/
 
 // where all objects will go
 const scene = new THREE.Scene();
@@ -48,95 +47,136 @@ const scene = new THREE.Scene();
 // camera
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.aspect = window.innerWidth/window.innerHeight;
-camera.position.y = 0.99
-camera.position.z = 50
+camera.position.y = 0.99;
+camera.position.z = 50;
 
 // renderer
 const renderer = new THREE.WebGLRenderer({
     canvas: document.getElementById("canvas"),
+    alpha: true,
     antialias: true
 });
+
+renderer.setClearColor(0x000000, 0);
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 
-// Make skybox
-const boxLoader = new THREE.CubeTextureLoader();
-
-const textures = boxLoader.load([
-    "/Daylight Box_Right.png",
-    "/Daylight Box_Left.png",
-    "/Daylight Box_Top.png",
-    "/Daylight Box_Bottom.png",
-    "/Daylight Box_Front.png",
-    "/Daylight Box_Back.png",
-]);
-
-scene.background = textures
-
-
 // set up lights
-const ambient = new THREE.AmbientLight()
+//const ambient = new THREE.AmbientLight(0xffffff, 3);
 
-scene.add(ambient)
+const spotlight = new THREE.SpotLight(0xffffff, 30, 0, 0.314, 0, 0.45)
+spotlight.position.set(20, 20, 100)
+const helper = new THREE.SpotLightHelper(spotlight)
 
-// Make grass
-const bladeGeometry = new THREE.PlaneGeometry(0.1, 1, 1, 4); // more segments = smoother bending
-bladeGeometry.translate(0, 0.5, 0); // anchor at bottom
 
-const count = 500000;
-const dummy = new THREE.Object3D();
+scene.add(spotlight);
 
-// Custom shader material will go here later
-const grassMaterial = new THREE.ShaderMaterial({
-  vertexShader, // placeholder
-  fragmentShader, // placeholder
-  uniforms: {
-    time: { value: 0.0 }
-  },
-  side: THREE.DoubleSide
+// load in models
+const ballLoader = new GLTFLoader(loadingManager);
+
+let ball;
+ballLoader.load(ballURL.href, function(gltf) {
+  ball = gltf.scene;
+  ball.position.set(-130,0,0);
+  ball.scale.set(115,115,115);
+  spotlight.target = ball;
+
+  // get pentagons 
+  const pentaList = [];
+
+  gltf.scene.traverse((child) => {
+    if (child.name.startsWith("penta")) {
+      pentaList.push(child);
+    }
+  })
+
+  scene.add(ball);
+  scene.add(spotlight.target);
+
+  // blur image 
+  animate();
+})
+
+// rotate ball
+let isDragging = false;
+
+let previousMousePosition = {
+  x: 0,
+  y: 0
+};
+
+const canvas = renderer.domElement;
+const raycaster = new THREE.Raycaster()
+
+canvas.addEventListener("mousedown", (e) => {
+  let coords = new THREE.Vector2(
+    (e.clientX / renderer.domElement.clientWidth) * 2 - 1,
+    -((e.clientY / renderer.domElement.clientHeight) * 2 - 1)
+  );
+
+  raycaster.setFromCamera(coords, camera);
+
+  const intersections = raycaster.intersectObjects(scene.children, true);
+
+  if (intersections.length > 0) {
+    isDragging = true;
+  }
+
 });
 
-const instancedMesh = new THREE.InstancedMesh(bladeGeometry, grassMaterial, count);
-scene.add(instancedMesh);
+canvas.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
 
-// Positioning blades
-for (let i = 0; i < count; i++) {
-  dummy.position.set(
-    (Math.random() - 0.5) * 100, // X
-    0,
-    (Math.random() - 0.5) * 100  // Z
-  );
-  dummy.rotation.y = Math.random() * Math.PI;
-  dummy.scale.setScalar(0.5 + Math.random() * 0.5); // vary height
-  dummy.updateMatrix();
-  instancedMesh.setMatrixAt(i, dummy.matrix);
-}
+  const deltaMove = {
+    x: e.movementX || e.mozMovementX || e.webkitMovementX || 0,
+    y: e.movementY || e.mozMovementY || e.webkitMovementY || 0
+  };
 
-// import football
+  // Adjust rotation axis and speed
+  const rotationSpeed = 0.005;
+  ball.rotation.y += deltaMove.x * rotationSpeed;
+  ball.rotation.x += deltaMove.y * rotationSpeed;
 
+});
 
-// import player
+canvas.addEventListener('mouseup', () => {
+  isDragging = false;
+});
 
+canvas.addEventListener('mouseleave', () => {
+  isDragging = false;
+});
 
+//const controls = new OrbitControls(camera, renderer.domElement);
 
 // animate function
 function animate() {
 
-    requestAnimationFrame(animate)
+    requestAnimationFrame(animate);
 
-    renderer.render(scene, camera)
+    // move ball into view
+    if (ball.position.x < -33) {
+      ball.position.x += 2;
+    }
+
+    // rotate ball
+    ball.rotation.x += 0.004;
+    ball.rotation.y += 0.004;
+    ball.rotation.z += 0.004;
+    
+
+    renderer.render(scene, camera);
 
 }
 
-animate()
 
 
 // event listeners
 
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth/window.innerHeight;
-    camera.updateProjectionMatrix()
+    camera.updateProjectionMatrix();
   
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
