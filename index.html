@@ -8,22 +8,55 @@
   </head>
   <body>
 
-    <main>
-      <img src="/Images/bg2.jpg" id="background">
+    <img src="/Images/bg2.jpg" id="background">
 
-      <!--<div id="overlayElements">
-        <nav>
+    <canvas id="canvas"></canvas>
+
+    <div id="interactionShim"></div>
+
+    <main>
+
+      <div id="overlayElements">
+        <nav id="navbar">
+
+          <img src="Images/logo.png" id="logo" width="300px">
+
+          <div id="jumpButtons">
+            
+            <a href="#" class="jumpButton">About</a>
+            <a href="#" class="jumpButton">Meet the Coach</a>
+            <a href="#" class="jumpButton">CCA Summer Camp</a>
+            <a href="#" class="jumpButton">Individual Training</a>
+            <a href="#" class="jumpButton">Winter Training</a>
+          </div>
 
         </nav>
 
-        <div>
-          
+        <div id="headerContainer">
+          <h1 id="titleCard">Coach Carter's Academy</h1>
+
+          <p>
+            Welcome
+          </p>
         </div>
-      </div>-->
+
+        <div id="panelContainer">
+          <div class="panel" id="aboutPanel">
+
+          </div>
+
+          <div class="panel" id="coachesPanel">
+            
+          </div>
+
+          <div class="panel" id="summerPanel">
+
+          </div>
+        </div>
+
+      </div>
       
     </main>
-
-    <canvas id="canvas"></canvas>
 
     <script type="module" src="/src/main.js"></script>
   </body>

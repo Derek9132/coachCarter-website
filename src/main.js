@@ -2,36 +2,12 @@ import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 import * as THREE from 'three';
 
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
-import { element } from 'three/tsl';
+import { element, texture } from 'three/tsl';
 
 // URLs
 
 const ballURL = new URL('/Models/soccerBall2.glb', import.meta.url);
 
-// shaders
-const vertexShader = `
-  uniform float time;
-  varying vec2 vUv;
-
-  void main() {
-    vUv = uv;
-    vec3 pos = position;
-    float swayStrength = 0.1;
-    float frequency = 2.0;
-    float phase = sin(time * frequency + instanceMatrix[3].x * 0.5);
-    pos.x += phase * swayStrength * pos.y;
-    gl_Position = projectionMatrix * modelViewMatrix * instanceMatrix * vec4(pos, 1.0);
-  }
-`;
-
-const fragmentShader = `
-  varying vec2 vUv;
-
-  void main() {
-    vec3 baseColor = mix(vec3(0.1, 0.4, 0.1), vec3(0.2, 0.8, 0.2), vUv.y);
-    gl_FragColor = vec4(baseColor, 1.0);
-  }
-`;
 
 // loading manager
 const loadingManager = new THREE.LoadingManager();
@@ -75,6 +51,9 @@ scene.add(spotlight);
 // load in models
 const ballLoader = new GLTFLoader(loadingManager);
 
+// store pentagons 
+const pentaList = [];
+
 let ball;
 ballLoader.load(ballURL.href, function(gltf) {
   ball = gltf.scene;
@@ -82,19 +61,58 @@ ballLoader.load(ballURL.href, function(gltf) {
   ball.scale.set(115,115,115);
   spotlight.target = ball;
 
-  // get pentagons 
-  const pentaList = [];
-
   gltf.scene.traverse((child) => {
     if (child.name.startsWith("penta")) {
       pentaList.push(child);
     }
-  })
+  });
+
+  const imageLoader = new THREE.TextureLoader();
+
+  const texture = imageLoader.load("/Images/carter-grayscale.png");
+
+  const circularMaskedMaterial = new THREE.ShaderMaterial({
+    uniforms: {
+      map: { value: texture },
+    },
+    vertexShader: `
+      varying vec2 vUv;
+  
+      void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform sampler2D map;
+      varying vec2 vUv;
+  
+      void main() {
+        vec2 center = vUv - vec2(0.5);
+        float dist = length(center);
+  
+        float circleMask = smoothstep(0.5, 0.15, dist); 
+  
+        vec4 texColor = texture2D(map, vUv);
+  
+        vec3 finalColor = mix(vec3(0.0), texColor.rgb, circleMask);
+  
+        gl_FragColor = vec4(finalColor, 1.0); // Fully opaque
+      }
+    `,
+    transparent: false, // No transparency — image is solid inside circle
+    depthWrite: true,
+  });
+
+  //pentaList[0].material = grayscaleBlendMaterial;
+  
+  pentaList.forEach((element, index) => {
+    element.material = circularMaskedMaterial;
+  });
 
   scene.add(ball);
   scene.add(spotlight.target);
 
-  // blur image 
   animate();
 })
 
@@ -106,10 +124,10 @@ let previousMousePosition = {
   y: 0
 };
 
-const canvas = renderer.domElement;
-const raycaster = new THREE.Raycaster()
+const canvas = document.getElementById("canvas");
+const raycaster = new THREE.Raycaster();
 
-canvas.addEventListener("mousedown", (e) => {
+window.addEventListener("mousedown", (e) => {
   let coords = new THREE.Vector2(
     (e.clientX / renderer.domElement.clientWidth) * 2 - 1,
     -((e.clientY / renderer.domElement.clientHeight) * 2 - 1)
@@ -125,8 +143,11 @@ canvas.addEventListener("mousedown", (e) => {
 
 });
 
-canvas.addEventListener('mousemove', (e) => {
-  if (!isDragging) return;
+window.addEventListener('mousemove', (e) => {
+  if (!isDragging) {
+    return;
+  }
+  else {
 
   const deltaMove = {
     x: e.movementX || e.mozMovementX || e.webkitMovementX || 0,
@@ -138,17 +159,16 @@ canvas.addEventListener('mousemove', (e) => {
   ball.rotation.y += deltaMove.x * rotationSpeed;
   ball.rotation.x += deltaMove.y * rotationSpeed;
 
-});
+}});
 
-canvas.addEventListener('mouseup', () => {
+
+window.addEventListener('mouseup', () => {
   isDragging = false;
 });
 
-canvas.addEventListener('mouseleave', () => {
+window.addEventListener('mouseleave', () => {
   isDragging = false;
 });
-
-//const controls = new OrbitControls(camera, renderer.domElement);
 
 // animate function
 function animate() {
@@ -163,7 +183,6 @@ function animate() {
     // rotate ball
     ball.rotation.x += 0.004;
     ball.rotation.y += 0.004;
-    ball.rotation.z += 0.004;
     
 
     renderer.render(scene, camera);
