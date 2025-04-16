@@ -69,7 +69,7 @@ ballLoader.load(ballURL.href, function(gltf) {
 
   const imageLoader = new THREE.TextureLoader();
 
-  const texture = imageLoader.load("/Images/carter-grayscale.png");
+  const texture = imageLoader.load("/Images/carter.jpg");
 
   const circularMaskedMaterial = new THREE.ShaderMaterial({
     uniforms: {
@@ -156,7 +156,7 @@ window.addEventListener('mousemove', (e) => {
 
   // Adjust rotation axis and speed
   const rotationSpeed = 0.005;
-  ball.rotation.y += deltaMove.x * rotationSpeed;
+  ball.rotation.y -= deltaMove.x * rotationSpeed;
   ball.rotation.x += deltaMove.y * rotationSpeed;
 
 }});

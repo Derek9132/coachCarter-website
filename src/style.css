@@ -2,10 +2,14 @@ html, body {
   margin: 0;
   padding: 0;
   border: 0;
-  overflow: hidden;
+  overflow-x: hidden;
   height: 100%;
   width: 100%;
   cursor: default;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
 html {
@@ -14,8 +18,6 @@ html {
 
 canvas {
   position: fixed;
-  top: 0;
-  left: 0;
   width: 100vw;
   height: 100vh;
   z-index: 1;
@@ -48,6 +50,8 @@ main {
   position: relative;
   z-index: 3;
   pointer-events: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 #overlayElements {
@@ -95,7 +99,7 @@ main {
 
 .jumpButton:after {
   background: none repeat scroll 0 0 transparent;
-  bottom: 0;
+  bottom: -5px;
   content: "";
   display: block;
   height: 2px;
@@ -114,13 +118,52 @@ main {
 #headerContainer {
   position: absolute;
   right: 0;
-  margin: 200px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 200px;
+  margin-right: 200px;
+  gap: 70px;
+}
+
+#titleCard {
+
+}
+
+#titleCard::after {
+
 }
 
 #panelContainer {
   display: flex;
   flex-direction: column;
+}
+
+.panel {
+  width: 100vw;
+  height: auto;
+  background-color: rgb(4, 4, 91);
+  color: white;
+}
+
+.swiper {
+  width: 400px;
+  height: 200px;
+}
+
+
+
+.swiper-slide {
+  border-radius: 20px;
+  background: linear-gradient(#ECEFFE, #CED6FB);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
 }
 
