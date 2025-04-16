@@ -205,6 +205,10 @@ main {
   color: white;
 }
 
+.panelText {
+  display: flex;
+}
+
 .swiper {
   width: 400px;
   height: 200px;
