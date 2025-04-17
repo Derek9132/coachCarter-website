@@ -112,7 +112,9 @@ main {
 #overlayElements {
   position: relative;
   z-index: 3;
-  width: 100%;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
 }
 
 
@@ -193,6 +195,29 @@ main {
 
 }
 
+#statsContainer {
+  background-color: rgb(6, 19, 31);
+  width: 100vw;
+  height: 34vh;
+  position: relative;
+  background: #ffffff;
+  background: linear-gradient(108deg,rgba(255, 255, 255, 1) 0%, rgba(217, 217, 217, 1) 50%, rgba(153, 153, 153, 1) 77%, rgba(150, 150, 150, 1) 100%);
+}
+
+#statsWrapper {
+  background: #d19e1d;
+  background: -webkit-linear-gradient(to right, #d19e1d, #ffd86e, #e3a812);
+  background: linear-gradient(to right, #d19e1d, #ffd86e, #e3a812);
+  width: 100vw;
+  height: 30vh;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  position: absolute;
+  margin: 0;
+  top: 50%;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+
 #panelContainer {
   display: flex;
   flex-direction: column;
@@ -200,13 +225,27 @@ main {
 
 .panel {
   width: 100vw;
-  height: auto;
+  height: 100%;
+  display: flex;
   background-color: rgb(4, 4, 91);
   color: white;
 }
 
 .panelText {
   display: flex;
+  flex-direction: column;
+  gap: 40px;
+  height: 100%;
+}
+
+.panelText > h2 {
+  margin: 30px 30px;
+  text-align: center;
+}
+
+.panelText > p {
+  margin: 0px 60px;
+  text-align: left;
 }
 
 .swiper {
@@ -217,8 +256,9 @@ main {
 
 
 .swiper-slide {
-  border-radius: 20px;
+  border-radius: 30px;
   background: linear-gradient(#ECEFFE, #CED6FB);
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
   display: flex;
   flex-direction: column;
   justify-content: center;
