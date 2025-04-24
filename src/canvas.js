@@ -194,6 +194,15 @@ function animate() {
 // event listeners
 
 window.addEventListener('resize', () => {
+
+    if (window.innerWidth <= 800) {
+      // move ball to center
+      ball.position.x = 0;
+    }
+    else {
+      ball.position.x = -130;
+    }
+
     camera.aspect = window.innerWidth/window.innerHeight;
     camera.updateProjectionMatrix();
   

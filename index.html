@@ -5,13 +5,14 @@
     <link rel="stylesheet" href="src/style.css"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=star" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://kit.fontawesome.com/f733144513.js" crossorigin="anonymous"></script>
     <title>Coach Carter's Academy</title>
 
     <style>
       .material-symbols-outlined {
         font-variation-settings:
-        'FILL' 0,
-        'wght' 400,
+        'FILL' 255,
+        'wght' 200,
         'GRAD' 0,
         'opsz' 24
       }
@@ -39,7 +40,7 @@
 
           <div id="jumpButtons">
             
-            <a href="#" class="jumpButton">About</a>
+            <a href="#about" class="jumpButton">About</a>
             <a href="#" class="jumpButton">Meet the Coach</a>
             <a href="#" class="jumpButton">CCA Summer Camp</a>
             <a href="#" class="jumpButton">Individual Training</a>
@@ -106,19 +107,19 @@
         <div id="statsWrapper">
           <div class="stats">
             <h2>
-
+              10+
             </h2>
             <p>
-
+              Years of Educating Youth Experience
             </p>
           </div>
 
           <div class="stats">
             <h2>
-
+              5+
             </h2>
             <p>
-              
+              Years of Coaching Education
             </p>
           </div>
         </div>
@@ -128,38 +129,71 @@
 
         <div id="panelContainer">
 
-          <div class="panel" id="aboutPanel">
-            <div id="video">
-              <img src="Images/test1.jpg" width="700px" style="height: 100%;">
+          <div class="about-panel" id="about">
+            <div class="panelMedia">
+              <img src="Images/test1.jpg" style="height: 100%; width: 100vw;" class="panelImage" id="aboutImage">
             </div>
 
-            <div class="panelText">
-              <h2 class="panelHeader">About</h2>
-              <p>At Coach Carter's Academy, we specialize in developing youth athletes' technical abilities, 
-                decision-making, and agility through personalized training and engaging camps.</p>
+            <div class="panelPages">
+
+              <div id="aboutPanel" class="panelPage" style="color: black; background-color: white;">
+                <div class="panelText">
+                  <h2 class="panelHeader">About</h2>
+                  <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corporis fuga rem est, veritatis, dolore aspernatur cum possimus illo omnis expedita repellendus ipsam eligendi sed excepturi, dolorum ea voluptatem autem asperiores!
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita ea perspiciatis facere quo officiis, repellat laborum assumenda rem commodi praesentium dolorum inventore totam eligendi iusto? Totam ipsam accusantium nobis odio.
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptatem assumenda minima doloribus amet exercitationem consequatur fugiat voluptate earum labore, est vel, inventore accusantium deserunt ab quidem totam doloremque dignissimos impedit.
+                  </p>
+                </div>
+              </div>
+
             </div>
 
+            <button id="button-about-left" class="panelButton button-left" style="color: silver;">
+              <i class="fa-solid fa-caret-left"></i>
+            </button>
+
+            <button id="button-about-right" class="panelButton button-right" style="color: silver;">
+              <i class="fa-solid fa-caret-right"></i>
+            </button>
 
           </div>
 
           <div class="panel" id="coachesPanel">
-            <div class="panelImage">
+
+            <div class="panelMedia">
+              <img src="Images/carter.jpg" style="height: 100%;" class="panelImage">
+            </div>
+
+            <div class="panelPages">
+
+              <div class="panelPage">
+                <div class="panelText">
+                  <h2 class="panelHeader">Meet the Coach</h2>
+                  <p>
+                    description here
+                  </p>
+                </div>
+              </div>
+
+              <!--<div class="panelPage">
+                <div class="panelText">
+                  <h2 class="panelHeader"></h2>
+                  <p>
+
+                  </p>
+                </div>
+              </div>-->
 
             </div>
 
-            <div class="panelText">
+            <button class="panelButton button-left" style="display: none;">
+              <i class="fa-solid fa-caret-left"></i>
+            </button>
 
-            </div>
-          </div>
+            <button class="panelButton button-right" style="display: none;">
+              <i class="fa-solid fa-caret-right"></i>
+            </button>
 
-          <div class="panel" id="summerPanel">
-            <div class="panelImage">
-
-            </div>
-
-            <div class="panelText">
-
-            </div>
           </div>
 
         </div>
